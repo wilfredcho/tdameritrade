@@ -6,7 +6,7 @@ def handle_error_response(resp):
         500: ServerError,
         403: Forbidden,
         404: NotFound,
-        504: GatewayTimeout
+        504: GatewayTimeout,
         -1: TDAAPIError
     }
 
