@@ -82,8 +82,8 @@ class TDClient(object):
 
     def _request(self, url, method="GET", params=None, *args, **kwargs):
         resp = self.session.request(method, url, params=params, *args, **kwargs)
-        if not response_is_valid(resp):
-            handle_error_response(resp)
+        # if not response_is_valid(resp):
+        #     handle_error_response(resp)
         return resp
 
     def accounts(self, positions=False, orders=False):
@@ -483,14 +483,14 @@ class TDClient(object):
         '''
         return self._request(CANCEL_ORDER.format(accountId=accountId, orderId=orderId), method='DELETE')
 
-    def placeOrder(self, accountId, order):
+    def placeOrder(self, idx, accountId, order):
         '''place an order
 
         Args:
             accountId (int): id of account to place order under
             order (JSON): order instance to place
         '''
-        return self._request(PLACE_ORDER.format(accountId=accountId), method='POST', json=order)
+        return idx, self._request(PLACE_ORDER.format(accountId=accountId), method='POST', json=order)
 
     def replaceOrder(self, accountId, orderId, order):
         '''place an order
