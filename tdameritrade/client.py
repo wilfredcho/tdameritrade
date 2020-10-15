@@ -3,7 +3,7 @@ import os
 import http
 import requests
 from .session import TDASession
-from .exceptions import TDAAPIError #handle_error_response, 
+from .exceptions import TDAAPIError
 from .urls import (
     # --ORDERS--
     CANCEL_ORDER,
