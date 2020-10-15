@@ -1,5 +1,7 @@
 import pandas as pd
 import os
+import http
+import requests
 from .session import TDASession
 from .exceptions import handle_error_response, TDAAPIError
 from .urls import (
@@ -81,7 +83,11 @@ class TDClient(object):
         self.session = TDASession(self._refreshToken, self._clientId)
 
     def _request(self, url, method="GET", params=None, *args, **kwargs):
-        resp = self.session.request(method, url, params=params, *args, **kwargs)
+        try:
+            resp = self.session.request(method, url, params=params, *args, **kwargs)
+        except http.client.RemoteDisconnected:
+            resp = requests.Response()
+            resp.status_code = 499
         # if not response_is_valid(resp):
         #     handle_error_response(resp)
         return resp
