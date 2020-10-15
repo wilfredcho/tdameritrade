@@ -1,4 +1,3 @@
-
 def handle_error_response(resp):
     codes = {
         400: ValidationError,
@@ -52,6 +51,7 @@ class Forbidden(TDAAPIError):
 
 class NotFound(TDAAPIError):
     pass
+
 
 class GatewayTimeout(TDAAPIError):
     pass
