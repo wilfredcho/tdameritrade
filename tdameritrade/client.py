@@ -159,7 +159,7 @@ class TDClient(object):
                                              'symbol': symbol,
                                              'startDate': startDate,
                                              'endDate': endDate
-                                         }).json()
+                                         })
         return ret
 
     def transactionsDF(self, accountId=None, type=None, symbol=None, startDate=None, endDate=None):
@@ -178,7 +178,7 @@ class TDClient(object):
 
         return self._request(SEARCH_INSTRUMENTS,
                              params={'symbol': symbol,
-                                     'projection': projection}).json()
+                                     'projection': projection})
 
     def searchDF(self, symbol, projection='symbol-search'):
         '''search for symbol as a dataframe'''
@@ -203,7 +203,7 @@ class TDClient(object):
         Args:
             cusip (str): the cusip to use, can find it by looking up in search
         '''
-        return self._request(GET_INSTRUMENT.format(cusip=cusip)).json()
+        return self._request(GET_INSTRUMENT.format(cusip=cusip))
 
     def instrumentDF(self, cusip):
         '''get instrument info from cusip as dataframe'''
@@ -219,7 +219,7 @@ class TDClient(object):
             symbol = [symbol]
 
         return self._request(GET_QUOTES,
-                             params={'symbol': [s.upper() for s in symbol]}).json()
+                             params={'symbol': [s.upper() for s in symbol]})
 
     def quoteDF(self, symbol):
         '''get quote, format as dataframe'''
@@ -375,7 +375,7 @@ class TDClient(object):
         if optionType not in OPTION_TYPE_VALUES:
             raise TDAAPIError('Option type must be in {}'.format(OPTION_TYPE_VALUES))
 
-        return self._request(GET_OPTION_CHAIN, params=params).json()
+        return self._request(GET_OPTION_CHAIN, params=params)
 
     def optionsDF(self,
                   symbol,
@@ -443,7 +443,7 @@ class TDClient(object):
             raise TDAAPIError('Change mus be in {}'.format(CHANGE_VALUES))
         params['change'] = change
 
-        return self._request(MOVERS.format(index=index), params=params).json()
+        return self._request(MOVERS.format(index=index), params=params)
 
     def orders(self,
                accountId=None,
@@ -478,7 +478,7 @@ class TDClient(object):
             params['fromEnteredTime'] = fromEnteredTime
         if toEnteredTime:
             params['toEnteredTime'] = toEnteredTime
-        return self._request(GET_ORDER_BY_QUERY, json=params).json()
+        return self._request(GET_ORDER_BY_QUERY, json=params)
 
     def cancelOrder(self, accountId, orderId):
         '''cancel the given order
@@ -506,7 +506,7 @@ class TDClient(object):
             orderId (int): id of order to replace
             order (JSON): order instance to place
         '''
-        return self._request(REPLACE_ORDER.format(accountId=accountId, orderId=orderId), method='PUT', data=order).json()
+        return self._request(REPLACE_ORDER.format(accountId=accountId, orderId=orderId), method='PUT', data=order)
 
     def savedOrders(self, accountId=None, savedOrderId=None):
         '''get saved orders
@@ -521,12 +521,12 @@ class TDClient(object):
         if not accountId:
             ret = {}
             for account in self.accountIds:
-                ret[account] = self._request(GET_SAVED_ORDER_BY_PATH.format(accountId=account)).json()
+                ret[account] = self._request(GET_SAVED_ORDER_BY_PATH.format(accountId=account))
             return ret
 
         if savedOrderId:
-            return self._request(GET_SAVED_ORDER.format(accountId=accountId, savedOrderId=savedOrderId)).json()
-        return self._request(GET_SAVED_ORDER_BY_PATH.format(accountId=accountId)).json()
+            return self._request(GET_SAVED_ORDER.format(accountId=accountId, savedOrderId=savedOrderId))
+        return self._request(GET_SAVED_ORDER_BY_PATH.format(accountId=accountId))
 
     def createSavedOrder(self, accountId, order):
         '''create a saved order
@@ -535,7 +535,7 @@ class TDClient(object):
             accountId (int): id of account to place order under
             order (JSON): order instance to place
         '''
-        return self._request(CREATE_SAVED_ORDER.format(accountId=accountId), method='POST', data=order).json()
+        return self._request(CREATE_SAVED_ORDER.format(accountId=accountId), method='POST', data=order)
 
     def deleteSavedOrder(self, accountId, savedOrderId):
         '''delete a saved order
@@ -544,7 +544,7 @@ class TDClient(object):
             accountId (int): id of account to place order under
             savedOrderId (int): id of order instance to delete
         '''
-        return self._request(DELETE_SAVED_ORDER.format(accountId=accountId, savedOrderId=savedOrderId), method='DELETE').json()
+        return self._request(DELETE_SAVED_ORDER.format(accountId=accountId, savedOrderId=savedOrderId), method='DELETE')
 
     def replaceSavedOrder(self, accountId, savedOrderId, order):
         '''create a saved order
@@ -554,7 +554,7 @@ class TDClient(object):
             savedOrderId (int): id of order instance to delete
             order (JSON): order instance to place
         '''
-        return self._request(REPLACE_SAVED_ORDER.format(accountId=accountId, savedOrderId=savedOrderId), method='PUT', data=order).json()
+        return self._request(REPLACE_SAVED_ORDER.format(accountId=accountId, savedOrderId=savedOrderId), method='PUT', data=order)
 
     def hours(self, market="EQUITY", date=None):
         '''get market hours
@@ -571,8 +571,8 @@ class TDClient(object):
         if market:
             if market not in MARKETS_VALUES:
                 raise TDAAPIError('Markets must be in {}'.format(MARKETS_VALUES))
-            return self._request(GET_HOURS_FOR_SINGLE_MARKET.format(market=market), params=params).json()
-        return self._request(GET_HOURS_FOR_MULTIPLE_MARKETS, params=params).json()
+            return self._request(GET_HOURS_FOR_SINGLE_MARKET.format(market=market), params=params)
+        return self._request(GET_HOURS_FOR_MULTIPLE_MARKETS, params=params)
 
     def preferences(self, accountId=None):
         '''get preferences for account
@@ -583,9 +583,9 @@ class TDClient(object):
         if not accountId:
             ret = {}
             for account in self.accountIds:
-                ret[account] = self._request(GET_PREFERENCES.format(accountId=account)).json()
+                ret[account] = self._request(GET_PREFERENCES.format(accountId=account))
             return ret
-        return self._request(GET_PREFERENCES.format(accountId=accountId)).json()
+        return self._request(GET_PREFERENCES.format(accountId=accountId))
 
     def updatePreferences(self, accountId, preferences):
         '''update preferences for account
@@ -594,7 +594,7 @@ class TDClient(object):
             accountId (int): account to get preferences for
             preferences (JSON): preferences to update
         '''
-        return self._request(UPDATE_PREFERENCES.format(accountId=accountId), method='PUT', data=preferences).json()
+        return self._request(UPDATE_PREFERENCES.format(accountId=accountId), method='PUT', data=preferences)
 
     def watchlists(self, accountId=None, watchlistId=None):
         '''get watchlist for account
@@ -604,10 +604,10 @@ class TDClient(object):
             watchlistId (int): watchlist to get
         '''
         if not accountId:
-            return self._request(GET_WATCHLISTS_MULTIPLE_ACCOUNTS).json()
+            return self._request(GET_WATCHLISTS_MULTIPLE_ACCOUNTS)
         if watchlistId:
-            return self._request(GET_WATCHLIST.format(accountId=accountId, watchlistId=watchlistId)).json()
-        return self._request(GET_WATCHLISTS.format(accountId=accountId)).json()
+            return self._request(GET_WATCHLIST.format(accountId=accountId, watchlistId=watchlistId))
+        return self._request(GET_WATCHLISTS.format(accountId=accountId))
 
     def createWatchlist(self, accountId, watchlist):
         '''create watchlist for account
