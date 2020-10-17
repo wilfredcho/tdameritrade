@@ -264,7 +264,7 @@ class TDClient(object):
 
         params['needExtendedHoursData'] = needExtendedHoursData
 
-        return self._request(GET_PRICE_HISTORY.format(symbol=symbol), params=params).json()
+        return self._request(GET_PRICE_HISTORY.format(symbol=symbol), data=params)
 
     def historyDF(self, symbol, **kwargs):
         '''get history as dataframe'''
