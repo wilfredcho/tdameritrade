@@ -43,13 +43,6 @@ class TestExtension:
             m.return_value.json.return_value = [MagicMock()]
             tdclient._request("http://goodurl.com", None)
 
-    def test_request_exception(self, tdclient):
-        from tdameritrade.exceptions import InvalidAuthToken
-        with patch('tdameritrade.session.TDASession.request') as m:
-            m.return_value.status_code = 401
-            with pytest.raises(InvalidAuthToken):
-                tdclient._request("http://goodurl.com", None)
-
     def test_accounts(self, tdclient):
         with patch('tdameritrade.session.TDASession.request') as m:
             m.return_value.status_code = 200

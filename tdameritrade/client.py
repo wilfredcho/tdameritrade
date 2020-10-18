@@ -159,7 +159,7 @@ class TDClient(object):
                                              'symbol': symbol,
                                              'startDate': startDate,
                                              'endDate': endDate
-                                         })
+                                         }).json() #TODO remove json()
         return ret
 
     def transactionsDF(self, accountId=None, type=None, symbol=None, startDate=None, endDate=None):
@@ -270,8 +270,9 @@ class TDClient(object):
         '''get history as dataframe'''
         x = self.history(symbol, **kwargs)
         df = pd.DataFrame(x['candles'])
-        df['datetime'] = pd.to_datetime(df['datetime'], unit='ms')
-
+        if x.status_code == 200:
+            df['datetime'] = pd.to_datetime(df['datetime'], unit='ms')
+        #TODO raise error
         return df
 
     def options(self,
@@ -580,12 +581,13 @@ class TDClient(object):
         Args:
             accountId (int): account to get preferences for
         '''
+        #TODO remove .json()
         if not accountId:
             ret = {}
             for account in self.accountIds:
-                ret[account] = self._request(GET_PREFERENCES.format(accountId=account))
+                ret[account] = self._request(GET_PREFERENCES.format(accountId=account)).json()
             return ret
-        return self._request(GET_PREFERENCES.format(accountId=accountId))
+        return self._request(GET_PREFERENCES.format(accountId=accountId)).json()
 
     def updatePreferences(self, accountId, preferences):
         '''update preferences for account
