@@ -1,3 +1,4 @@
+
 def handle_error_response(resp):
     codes = {
         400: ValidationError,
@@ -6,7 +7,7 @@ def handle_error_response(resp):
         403: Forbidden,
         404: NotFound,
         504: GatewayTimeout,
-        -1: TDAAPIError
+        -1: TDAAPIError,
     }
 
     raise codes[resp.status_code]()
@@ -29,7 +30,7 @@ class TDAAPIError(Exception):
 
     def __str__(self):
         if self.code:
-            return '{}: {}'.format(self.code, self.message)
+            return "{}: {}".format(self.code, self.message)
         return self.data
 
 
